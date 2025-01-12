@@ -48,9 +48,12 @@ body {
 
 .no-plants-message {
   text-align: center;
-  font-size: 18px;
-  color: #8e8ea1;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #B0CAD1;
   font-family: 'Poppins', sans-serif;
+  margin: 10px;
 }
 
 .totals-container {
