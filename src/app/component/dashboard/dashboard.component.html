@@ -1,0 +1,408 @@
+<body>
+  <app-sidenav></app-sidenav>
+
+  <div class="header">
+    <div class="header-title animate__animated animate__fadeInDown">Monitoreo global</div>
+    <div class="header-icons animate__animated animate__fadeInDown">
+      <img src="assets/Language.svg" alt="Idioma" style="position: relative; top: 12px;">
+      <img src="assets/UserSettings.svg" alt="Ajustes" style="position: relative; top: 12px;">
+      <img src="assets/Notification.svg" alt="Notificaciones" style="position: relative; top: 12px;">
+      <div class="user-info">{{ user.username}}</div>
+    </div>
+  </div>
+
+  <div class="totals-container animate__animated animate__pulse animate__delay-1s">
+    <div class="total-card ok animate__animated animate__fadeInDown">
+      <p class="total-title">Lecturas OK</p>
+      <p class="total-value">{{ calculateTotals().readings }}</p>
+      <div class="total-icon">
+        <img src="assets/Ok.svg" alt="Ok" />
+      </div>
+    </div>
+
+    <div class="total-card medium-alert animate__animated animate__fadeInDown">
+      <p class="total-title">Alertas Medias</p>
+      <p class="total-value">{{ calculateTotals().mediumAlerts }}</p>
+      <div class="total-icon">
+        <img src="assets/Medium.svg" alt="Medium" />
+      </div>
+    </div>
+
+    <div class="total-card red-alert animate__animated animate__fadeInDown">
+      <p class="total-title">Alertas Rojas</p>
+      <p class="total-value">{{ calculateTotals().redAlerts }}</p>
+      <div class="total-icon">
+        <img src="assets/Red.svg" alt="Red" />
+      </div>
+    </div>
+
+    <div class="total-card disabled animate__animated animate__fadeInDown">
+      <p class="total-title">Sensores Deshabilitados</p>
+      <p class="total-value">{{ calculateTotals().disabledSensors }}</p>
+      <div class="total-icon">
+        <img src="assets/Sensors.svg" alt="Disabled" />
+      </div>
+    </div>
+  </div>
+
+
+  <div class="plants-card animate__animated animate__fadeIn">
+    <div class="plants-header">
+      <h3 class="plants-title">Plantas</h3>
+      <div class="plants-actions">
+        <button type="button" class="create-plant-button" data-bs-toggle="modal" data-bs-target="#createPlantModal">
+          + Crear nueva planta
+        </button>
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar planta..." />
+        <select [(ngModel)]="selectedCountry">
+          <option value="">Seleccionar País</option>
+          <option *ngFor="let country of countries" [value]="country.name"> {{ country.name }} </option>
+        </select>
+        <button (click)="sortBy('name')">Ordenar Alfabéticamente</button>
+        <button (click)="deleteFilters()">Borrar Filtros</button>
+      </div>
+    </div>
+
+
+
+    <table class="plants-table">
+      <thead>
+        <tr>
+          <th class="clickable" (click)="sortBy('country')">Pais ▲▼</th>
+          <th class="clickable" (click)="sortBy('name')">Nombre de la planta ▲▼</th>
+          <th class="clickable" (click)="sortBy('readings')"><img src="assets/Ok.svg" alt="Ok" class="icon" />
+            Lecturas ▲▼</th>
+          <th class="clickable" (click)="sortBy('mediumAlerts')"><img src="assets/Medium.svg" alt="Medium"
+              class="icon" />
+            Alertas medias ▲▼</th>
+          <th class="clickable" (click)="sortBy('redAlerts')"><img src="assets/Red.svg" alt="Red" class="icon" />
+            Alertas rojas ▲▼</th>
+          <th style="text-align: center;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let plant of filteredPlants"
+          [ngClass]="{ 'animate__animated animate__fadeOut': plant.id_plant === animatingPlantId, 'selected-plant': plant === selectedPlant }"
+          (click)="selectPlant(plant)">
+          <td>
+            <img *ngIf="plant.flagUrl" [src]="plant.flagUrl" alt="{{ plant.country }}" class="flag-image" />
+            {{ plant.country }}
+          </td>
+          <td>{{ plant.name }}</td>
+          <td>{{ calculateTotals(plant).readings }}</td>
+          <td>{{ calculateTotals(plant).mediumAlerts }}</td>
+          <td>{{ calculateTotals(plant).redAlerts }}</td>
+          <td style="text-align: center;">
+
+            <div class="btn-group dropend">
+              <img type="button" src="assets/PlantsSettings.svg" alt="PlantsSettings"
+                class="actions-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" />
+
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item clickable edit-plant-button" data-bs-toggle="modal"
+                    data-bs-target="#EditPlantModal" (click)="openEditModal(plant)">Editar planta</a>
+                </li>
+                <li><a class="dropdown-item clickable" (click)="deletePlant(plant.id_plant)">Eliminar planta</a>
+                </li>
+              </ul>
+
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="filteredPlants.length === 0">
+      <p class="no-plants-message">
+        Usted no tiene ninguna planta disponible
+      </p>
+    </div>
+  </div>
+
+  <div class="selected-plant-container animate__animated animate__fadeIn">
+    <h3 class="selected-plant-info monitoring-title">Monitoreo por plantas</h3>
+    <div *ngIf="selectedPlant" class="selected-plant-info">
+      <div>
+        <img *ngIf="selectedPlant.flagUrl" [src]="selectedPlant.flagUrl" alt="{{ selectedPlant.country }}"
+          class="flag-image" />
+        <span class="plant-details">
+          {{ selectedPlant.country }}, {{ selectedPlant.name }}
+        </span>
+      </div>
+    </div>
+    <div *ngIf="!selectedPlant" class="no-plant-selected">
+      Selecciona una planta para ver los detalles.
+    </div>
+  </div>
+
+  <div class="plant-categories-container animate__animated animate__fadeInUp clickable">
+    <div class="category-card " *ngFor="let category of categoriesForPlant"  data-bs-toggle="modal"
+    data-bs-target="#EditCategoryModal" (click)="openEditCategoryModal(category)" >
+      <p class="category-name">{{ category.category.name }}</p>
+
+      <div class="category-values">
+
+        <div class="value-item">
+          <img src="assets/Ok.svg" alt="Lecturas" class="icon" />
+          <span class="value">{{ category.readings }}</span>
+        </div>
+
+        <div class="value-item">
+          <img src="assets/Medium.svg" alt="Alertas medias" class="icon" />
+          <span class="value">{{ category.mediumAlerts }}</span>
+        </div>
+
+        <div class="value-item">
+          <img src="assets/Red.svg" alt="Alertas rojas" class="icon" />
+          <span class="value">{{ category.redAlerts }}</span>
+        </div>
+      </div>
+
+      <div class="category-icon">
+        <img [src]="getCategoryIcon(category.category.idCategory)" [alt]="category.category.name" />
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="createPlantModal" tabindex="-1" aria-labelledby="createPlantModalLabel" aria-hidden="true"
+    (click)="onBackdropClick($event, newPlantForm)">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createPlantModalLabel">Crear nueva planta</h5>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="newPlantForm">
+            <label for="plantName" class="form-label">Nombre planta</label>
+            <input id="plantName" type="text" formControlName="name" class="form-control"
+              placeholder="Ingrese nombre" />
+            <div class="error-messages">
+              <div *ngIf="newPlantForm.get('name')?.invalid && newPlantForm.get('name')?.touched">
+                <div *ngIf="newPlantForm.get('name')?.hasError('required')">* Nombre requerido.</div>
+                <div *ngIf="newPlantForm.get('name')?.hasError('pattern')">* El nombre no puede estar vacío o contener
+                  solo espacios.</div>
+                <div *ngIf="newPlantForm.get('name')?.hasError('maxlength')">* El nombre no puede superar los 100
+                  caracteres.</div>
+              </div>
+              <div *ngIf="errorMessage"> {{ errorMessage }} </div>
+            </div>
+
+            <label for="plantCountry" class="form-label">País</label>
+            <select id="plantCountry" formControlName="country" class="form-select">
+              <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+            </select>
+            <div class="error-messages"
+              *ngIf="newPlantForm.get('country')?.hasError('required') && newPlantForm.get('country')?.touched">
+              * Por favor, selecciona un país.
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="cancelForm(newPlantForm)">Cancelar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="!isFormValid(newPlantForm)"
+            (click)="createPlant()">Crear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="EditPlantModal" tabindex="-1" aria-labelledby="editPlantAndCategoryModalLabel"
+    aria-hidden="true" (click)="onBackdropClick($event, combinedForm)">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPlantAndCategoryModalLabel">Editar planta</h5>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="combinedForm">
+
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="plantName" class="form-label">Nombre planta</label>
+                <input id="plantName" type="text" formControlName="name" class="form-control"
+                  placeholder="Ingrese nombre" />
+                <div class="error-messages">
+                  <div *ngIf="combinedForm.get('name')?.invalid && combinedForm.get('name')?.touched">
+                    <div *ngIf="combinedForm.get('name')?.hasError('required')">* Nombre requerido.</div>
+                    <div *ngIf="combinedForm.get('name')?.hasError('pattern')">* El nombre no puede estar vacío o
+                      contener
+                      solo espacios.</div>
+                    <div *ngIf="combinedForm.get('name')?.hasError('maxlength')">* El nombre no puede superar los 100
+                      caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <label for="plantCountry" class="form-label">País</label>
+                <select id="plantCountry" formControlName="country" class="form-select">
+                  <option *ngFor="let country of countries" [value]="country.name">{{ country.name }}</option>
+                </select>
+                <div class="error-messages"
+                  *ngIf="combinedForm.get('country')?.hasError('required') && combinedForm.get('country')?.touched">
+                  * Por favor, selecciona un país.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="categorySelector" class="form-label">Seleccionar Categoría</label>
+              <select id="categorySelector" class="form-select" formControlName="selectedCategory"
+                (change)="onCategoryChange($event)">
+                <option *ngFor="let category of categoriesForPlant" [value]="category.id">{{
+                  category.category.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="plantReadings" class="form-label">Cantidad de lecturas</label>
+                <input id="plantReadings" type="number" formControlName="readings" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="combinedForm.get('readings')?.invalid && combinedForm.get('readings')?.touched">
+                  <div *ngIf="combinedForm.get('readings')?.hasError('required')">* Lectura requerida.</div>
+                  <div *ngIf="combinedForm.get('readings')?.hasError('pattern')">* Debe ser un número válido.
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <label for="plantDisabledSensors" class="form-label">Sensores Deshabilitados</label>
+                <input id="plantDisabledSensors" type="number" formControlName="disabledSensors" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="combinedForm.get('disabledSensors')?.invalid && combinedForm.get('disabledSensors')?.touched">
+                  <div *ngIf="combinedForm.get('disabledSensors')?.hasError('required')">* Sensores
+                    deshabilitados
+                    requeridos.</div>
+                  <div *ngIf="combinedForm.get('disabledSensors')?.hasError('pattern')">* Debe ser un número
+                    válido.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6">
+                <label for="plantMediumAlerts" class="form-label">Alertas medias</label>
+                <input id="plantMediumAlerts" type="number" formControlName="mediumAlerts" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="combinedForm.get('mediumAlerts')?.invalid && combinedForm.get('mediumAlerts')?.touched">
+                  <div *ngIf="combinedForm.get('mediumAlerts')?.hasError('required')">* Alerta media
+                    requerida.
+                  </div>
+                  <div *ngIf="combinedForm.get('mediumAlerts')?.hasError('pattern')">* Debe ser un número
+                    válido.
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <label for="plantRedAlerts" class="form-label">Alertas rojas</label>
+                <input id="plantRedAlerts" type="number" formControlName="redAlerts" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="combinedForm.get('redAlerts')?.invalid && combinedForm.get('redAlerts')?.touched">
+                  <div *ngIf="combinedForm.get('redAlerts')?.hasError('required')">* Alerta roja requerida.
+                  </div>
+                  <div *ngIf="combinedForm.get('redAlerts')?.hasError('pattern')">* Debe ser un número válido.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            (click)="cancelForm(combinedForm)">Cancelar</button>
+          <button type="button" class="btn btn-primary" [disabled]="!isFormValid(combinedForm)" data-bs-dismiss="modal"
+            (click)="EditPlant()">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <div class="modal fade" id="EditCategoryModal" tabindex="-1" aria-labelledby="EditCategoryModalLabel" aria-hidden="true"
+    (click)="onBackdropClick($event, editCategoryForm)">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="EditCategoryModalLabel">Editar categoria</h5>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editCategoryForm">      
+
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="plantReadings" class="form-label">Cantidad de lecturas</label>
+                <input id="plantReadings" type="number" formControlName="readings" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="editCategoryForm.get('readings')?.invalid && editCategoryForm.get('readings')?.touched">
+                  <div *ngIf="editCategoryForm.get('readings')?.hasError('required')">* Lectura requerida.</div>
+                  <div *ngIf="editCategoryForm.get('readings')?.hasError('pattern')">* Debe ser un número válido.</div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <label for="plantDisabledSensors" class="form-label">Sensores Deshabilitados</label>
+                <input id="plantDisabledSensors" type="number" formControlName="disabledSensors" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="editCategoryForm.get('disabledSensors')?.invalid && editCategoryForm.get('disabledSensors')?.touched">
+                  <div *ngIf="editCategoryForm.get('disabledSensors')?.hasError('required')">* Sensores deshabilitados
+                    requeridos.</div>
+                  <div *ngIf="editCategoryForm.get('disabledSensors')?.hasError('pattern')">* Debe ser un número válido.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6">
+                <label for="plantMediumAlerts" class="form-label">Alertas medias</label>
+                <input id="plantMediumAlerts" type="number" formControlName="mediumAlerts" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="editCategoryForm.get('mediumAlerts')?.invalid && editCategoryForm.get('mediumAlerts')?.touched">
+                  <div *ngIf="editCategoryForm.get('mediumAlerts')?.hasError('required')">* Alerta media requerida.</div>
+                  <div *ngIf="editCategoryForm.get('mediumAlerts')?.hasError('pattern')">* Debe ser un número válido.</div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <label for="plantRedAlerts" class="form-label">Alertas rojas</label>
+                <input id="plantRedAlerts" type="number" formControlName="redAlerts" class="form-control"
+                  placeholder="Ingrese" />
+                <div class="error-messages"
+                  *ngIf="editCategoryForm.get('redAlerts')?.invalid && editCategoryForm.get('redAlerts')?.touched">
+                  <div *ngIf="editCategoryForm.get('redAlerts')?.hasError('required')">* Alerta roja requerida.</div>
+                  <div *ngIf="editCategoryForm.get('redAlerts')?.hasError('pattern')">* Debe ser un número válido.</div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="cancelForm(editCategoryForm)">Cancelar</button>
+              <button type="button" class="btn btn-primary" [disabled]="!isFormValid(editCategoryForm)"
+                data-bs-dismiss="modal" (click)="editOnlyCategory()">Editar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</body>

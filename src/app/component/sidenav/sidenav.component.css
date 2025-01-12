@@ -1,0 +1,52 @@
+.sidenav {
+    width: 70px; 
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    opacity: 1;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+  }
+  
+  .logo {
+    width: 36px;
+    height: 32.61px;
+    margin-bottom: 40px;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    margin: 40px 0;
+  }
+  
+  nav ul li img {
+    width: 20px;
+    height: 24px;
+    cursor: pointer;
+  }
+  
+  nav ul li img:hover {
+    cursor: pointer;
+  }
+  
+  .logout {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  

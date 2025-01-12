@@ -1,0 +1,206 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    background: url('/assets/Background.svg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    overflow: hidden;
+}
+
+
+.left-section {
+    flex: 1.2;
+    background-size: cover;
+    color: #fff;
+    padding: 128px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.left-section h2 {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 58px;
+    margin: 0;
+}
+
+.left-section p {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    margin: 24px 0;
+    width: 400px;
+}
+
+.icon img {
+    margin-bottom: 16px;
+    display: block;
+}
+
+.right-section {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 128px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.right-section h2 {
+    font-size: 26px;
+    font-weight: 550;
+    margin-bottom: 14px;
+}
+
+.right-section h3 {
+    font-size: 38px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.right-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.right-section label {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.right-section input {
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 100%;
+    border-radius: 10px;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+.right-section button {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #33A3AA;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.right-section button:hover {
+    background-color: #2a8994;
+}
+
+.right-section button:disabled {
+    background-color: #cccccc;
+}
+
+.helper {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #47464A;
+}
+
+.helper a {
+    color: #33A3AA;
+    text-decoration: none;
+}
+
+.helper a:hover {
+    text-decoration: underline;
+}
+
+
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    font-size: 14px;
+    padding: 10px 40px 10px 10px;
+    border: 1px solid #ccc;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    top: 40%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.error-messages {
+    font-size: 12px;
+    color: #555;
+    margin-top: -10px;
+    display: flex;
+    align-items: center;
+}
+
+
+.modal-content {
+    width: 400px;
+    border-radius: 10px;
+    background-color: #F8F9FA;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-footer {
+    border-top: none;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background-color: #F8F9FA;
+    padding: 10px;
+}
+
+.helper-container {
+    display: flex;
+    gap: 20px;
+}
+
+.left-helper {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 21px;
+    margin-right: auto;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #47464A;
+    cursor: pointer;
+}
+
+.left-helper:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #33A3AA;
+    font-weight: 500;
+    padding: 10px 20px;
+    max-width: 170px;
+}
+
+.btn-primary:hover {
+    background-color: #2B8891;
+}

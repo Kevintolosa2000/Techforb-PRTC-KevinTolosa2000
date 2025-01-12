@@ -1,0 +1,131 @@
+<body>
+  <div class="left-section">
+    <div class="animate__animated animate__fadeInRight">
+      <h2>Registrarse</h2>
+      <p>¡Bienvenido! Estamos encantados de que quieras unirte a nuestra plataforma. Regístrate y comienza a disfrutar de todas las ventajas que ofrecemos. No pierdas la oportunidad de ser parte de nuestra comunidad.</p>
+      <div class="icon">
+        <img src="assets/Monitoreo integral.svg" alt="Monitoreo Integral" >
+        <img src="assets/Notificaciones en tiempo real.svg" alt="Notificaciones en Tiempo Real">
+      </div>
+    </div>
+  </div>
+
+  <div class="right-section animate__animated animate__fadeInLeft">
+    <h3>Portal de monitoreo</h3>
+    <h2>Registrarse</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+      <input class="animate__animated animate__pulse animate__delay-1s" type="text" id="username"
+        formControlName="username" placeholder="Usuario">
+
+      <div class="error-messages">
+        <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+
+          <div *ngIf="registerForm.get('username')?.hasError('required')">
+            * Usuario requerido
+          </div>
+
+          <div *ngIf="registerForm.get('username')?.hasError('pattern')">
+            * El usuario no puede estar vacío o contener solo espacios.
+          </div>
+
+          <div *ngIf="registerForm.get('username')?.hasError('maxlength')">
+            * El usuario no puede superar los 50 caracteres.
+          </div>
+
+        </div>
+
+        <div *ngIf="usernameErrorMessage">{{ usernameErrorMessage }}</div>
+
+      </div>
+
+
+
+
+      <input class="animate__animated animate__pulse animate__delay-1s" type="email" id="email" formControlName="email"
+        placeholder="Email">
+
+      <div class="error-messages">
+        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+
+          <div *ngIf="registerForm.get('email')?.hasError('required')">
+            * Correo requerido.
+          </div>
+
+          <div *ngIf="registerForm.get('email')?.hasError('email')">
+            * Formato de correo invalido.
+          </div>
+          
+        </div>
+
+        <div *ngIf="emailErrorMessage">{{ emailErrorMessage }}</div>
+
+      </div>
+
+      <div class="password-container animate__animated animate__pulse animate__delay-1s">
+        <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" formControlName="password"
+          placeholder="Contraseña">
+        <img src="assets/Shape.svg" alt="Mostrar contraseña" class="toggle-password" (click)="togglePasswordVisibility()">
+      </div>
+
+      <div class="error-messages">
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+
+          <div *ngIf="registerForm.get('password')?.hasError('required') ">
+            * Contraseña requerida.
+          </div>
+
+          <div *ngIf="registerForm.get('password')?.hasError('minlength')">
+            * La contraseña debe tener al menos 8 caracteres.
+          </div>
+
+          <div *ngIf="registerForm.get('password')?.hasError('pattern')">
+            * La contraseña debe incluir una mayuscula, una minuscula, un numero y un caracter especial.
+          </div>
+
+        </div>
+      </div>
+
+      <div class="password-container animate__animated animate__pulse animate__delay-1s">
+        <input [type]="isPasswordVisible ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword"
+          placeholder="Repetir Contraseña">
+          <img src="assets/Shape.svg" alt="Mostrar contraseña" class="toggle-password" (click)="togglePasswordVisibility()">
+      </div>
+      
+      <div class="error-messages">
+        <div *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched">
+          * Las contraseñas no coinciden.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid">Registrar</button>
+      <p class="helper">Protegido por reCAPTCHA y sujeto a la <a href="https://www.linkedin.com/in/kevin-tolosa/"
+        target="_blank" rel="noopener noreferrer">Política de Privacidad</a> y <a
+        href="https://github.com/Kevintolosa2000?tab=repositories" target="_blank"
+        rel="noopener noreferrer">Condiciones</a>.</p>
+      <p class="helper">Ya tienes cuenta?<a href="/login"> Iniciar sesion</a></p>
+
+    </form>
+  </div>
+
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header d-flex justify-content-center">
+          <h1 style="color:#33A3AA;" class="modal-title fs-5" id="staticBackdropLabel">
+            <p>¡Registro Exitoso!</p>
+          </h1>
+        </div>
+        <div class="modal-body">
+          <p style="color:#33A3AA;"> Tu cuenta ha sido creada exitosamente. Haz clic en el botón para ir a iniciar
+            sesión.</p>
+        </div>
+        
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="button" class="btn btn-register w-100" (click)="navigateToLogin()">Ir a Iniciar Sesión</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

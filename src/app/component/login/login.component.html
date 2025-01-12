@@ -1,0 +1,98 @@
+<body>
+    <div class="left-section">
+        <div class="animate__animated animate__fadeInLeft">
+            <h2>Iniciar sesión</h2>
+            <p>Nos alegra tenerte de vuelta y estamos listos para atender tus necesidades. Inicia sesión y continúa
+                aprovechando al máximo nuestra plataforma.</p>
+            <div class="icon">
+                <img src="assets/Monitoreo integral.svg" alt="Monitoreo Integral" width="411" height="41">
+                <img src="assets/Notificaciones en tiempo real.svg" alt="Notificaciones en Tiempo Real" width="380"
+                    height="41">
+            </div>
+        </div>
+    </div>
+    <div class="right-section animate__animated animate__fadeInRight">
+        <h3>Portal de monitoreo</h3>
+        <h2>Iniciar sesión</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+            <input class="animate__animated animate__pulse animate__delay-1s" type="email" id="email"
+                formControlName="email" placeholder="Email">
+
+            <div class="error-messages">
+                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+
+                    <div *ngIf="loginForm.get('email')?.errors?.['required']">* Email es requerido</div>
+
+                    <div *ngIf="loginForm.get('email')?.errors?.['email']">* Formato de email no válido</div>
+
+                </div>
+            </div>
+
+            <div class="password-container animate__animated animate__pulse animate__delay-1s">
+                <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" formControlName="password"
+                    placeholder="Contraseña">
+                <img src="assets/Shape.svg" alt="Mostrar contraseña" class="toggle-password"
+                    (click)="togglePasswordVisibility()">
+            </div>
+
+            <div class="error-messages">
+                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+
+                    <div *ngIf="loginForm.get('password')?.errors?.['required']">* Contraseña es requerida</div>
+
+                    <div *ngIf="loginForm.get('password')?.errors?.['minlength']">* Contraseña debe tener al menos 6
+                        caracteres</div>
+
+                </div>
+
+                <div *ngIf="errorMessage"> {{ errorMessage }} </div>
+
+            </div>
+
+            <div class="helper-container">
+                <div class="left-helper">
+                    <a data-bs-toggle="modal" data-bs-target="#Forgot">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" [disabled]="loginForm.invalid" class="btn">Iniciar sesión</button>
+            
+            </div>
+
+
+
+            <p class="helper">Protegido por reCAPTCHA y sujeto a la <a href="https://www.linkedin.com/in/kevin-tolosa/"
+                    target="_blank" rel="noopener noreferrer">Política de Privacidad</a> y <a
+                    href="https://github.com/Kevintolosa2000?tab=repositories" target="_blank"
+                    rel="noopener noreferrer">Condiciones</a>.</p>
+
+            <p class="helper">¿No tienes una cuenta?<a href="/user-register"> Registrarse</a></p>
+
+        </form>
+    </div>
+
+    <div class="modal fade" id="Forgot" tabindex="-1" aria-labelledby="ForgotModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div style="text-align: center;   font-family: 'Poppins', sans-serif;">
+                        <p>
+                            Sabemos lo frustrante que puede ser olvidar una contraseña, pero no te preocupes, estamos
+                            aqui para ayudarte.
+                        </p>
+                        <h4>🛠️ ¿Cómo contactarnos?</h4>
+                        <p>📧 <strong>Pagina Web:</strong> AyudaTechforb.com</p>
+                        <p>📞 <strong>Telefono:</strong> +54 223 1234-5678</p>
+                        <p>📆 <strong>Horario de atención:</strong> Lunes de 9:00 a 10:00</p>
+                        <p>¡Estamos aquí para lo que necesites! 😊</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
