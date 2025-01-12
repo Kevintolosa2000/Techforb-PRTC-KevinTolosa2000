@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "techfrob-PT": {
+    "techforb-PrTc": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/techfrob-pt",
+            "outputPath": "dist/techforb-PrTc",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -43,8 +43,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "5kb",
+                  "maximumError": "10kb"
                 }
               ],
               "outputHashing": "all"
@@ -70,10 +70,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "techfrob-PT:build:production"
+              "browserTarget": "techforb-PrTc:build:production"
             },
             "development": {
-              "browserTarget": "techfrob-PT:build:development"
+              "browserTarget": "techforb-PrTc:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -81,7 +81,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "techfrob-PT:build"
+            "browserTarget": "techforb-PrTc:build"
           }
         },
         "test": {
