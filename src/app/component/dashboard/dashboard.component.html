@@ -135,8 +135,8 @@
   </div>
 
   <div class="plant-categories-container animate__animated animate__fadeInUp clickable">
-    <div class="category-card " *ngFor="let category of categoriesForPlant"  data-bs-toggle="modal"
-    data-bs-target="#EditCategoryModal" (click)="openEditCategoryModal(category)" >
+    <div class="category-card " *ngFor="let category of categoriesForPlant" data-bs-toggle="modal"
+      data-bs-target="#EditCategoryModal" (click)="openEditCategoryModal(category)">
       <p class="category-name">{{ category.category.name }}</p>
 
       <div class="category-values">
@@ -178,8 +178,9 @@
             <div class="error-messages">
               <div *ngIf="newPlantForm.get('name')?.invalid && newPlantForm.get('name')?.touched">
                 <div *ngIf="newPlantForm.get('name')?.hasError('required')">* Nombre requerido.</div>
-                <div *ngIf="newPlantForm.get('name')?.hasError('pattern')">* El nombre no puede estar vacío o contener
-                  solo espacios.</div>
+                <div *ngIf="newPlantForm.get('name')?.hasError('pattern')"> * El nombre debe tener al menos una letra,
+                  no contener caracteres especiales y no estar vacío o formado solo por espacios.
+                </div>
                 <div *ngIf="newPlantForm.get('name')?.hasError('maxlength')">* El nombre no puede superar los 100
                   caracteres.</div>
               </div>
@@ -225,12 +226,13 @@
                 <div class="error-messages">
                   <div *ngIf="combinedForm.get('name')?.invalid && combinedForm.get('name')?.touched">
                     <div *ngIf="combinedForm.get('name')?.hasError('required')">* Nombre requerido.</div>
-                    <div *ngIf="combinedForm.get('name')?.hasError('pattern')">* El nombre no puede estar vacío o
-                      contener
-                      solo espacios.</div>
+                    <div *ngIf="combinedForm.get('name')?.hasError('pattern')"> * El nombre debe tener al menos una
+                      letra, no contener caracteres especiales y no estar vacío o formado solo por espacios.
+                    </div>
                     <div *ngIf="combinedForm.get('name')?.hasError('maxlength')">* El nombre no puede superar los 100
                       caracteres.</div>
                   </div>
+                  <div *ngIf="errorMessage"> {{ errorMessage }} </div>
                 </div>
               </div>
 
@@ -329,15 +331,15 @@
 
 
 
-  <div class="modal fade" id="EditCategoryModal" tabindex="-1" aria-labelledby="EditCategoryModalLabel" aria-hidden="true"
-    (click)="onBackdropClick($event, editCategoryForm)">
+  <div class="modal fade" id="EditCategoryModal" tabindex="-1" aria-labelledby="EditCategoryModalLabel"
+    aria-hidden="true" (click)="onBackdropClick($event, editCategoryForm)">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="EditCategoryModalLabel">Editar categoria</h5>
         </div>
         <div class="modal-body">
-          <form [formGroup]="editCategoryForm">      
+          <form [formGroup]="editCategoryForm">
 
             <div class="row mb-3">
               <div class="col-6">
@@ -372,8 +374,10 @@
                   placeholder="Ingrese" />
                 <div class="error-messages"
                   *ngIf="editCategoryForm.get('mediumAlerts')?.invalid && editCategoryForm.get('mediumAlerts')?.touched">
-                  <div *ngIf="editCategoryForm.get('mediumAlerts')?.hasError('required')">* Alerta media requerida.</div>
-                  <div *ngIf="editCategoryForm.get('mediumAlerts')?.hasError('pattern')">* Debe ser un número válido.</div>
+                  <div *ngIf="editCategoryForm.get('mediumAlerts')?.hasError('required')">* Alerta media requerida.
+                  </div>
+                  <div *ngIf="editCategoryForm.get('mediumAlerts')?.hasError('pattern')">* Debe ser un número válido.
+                  </div>
                 </div>
               </div>
 
@@ -401,8 +405,4 @@
       </div>
     </div>
   </div>
-
-
-
-
 </body>

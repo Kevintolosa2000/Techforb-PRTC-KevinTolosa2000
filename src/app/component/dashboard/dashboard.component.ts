@@ -37,12 +37,12 @@ export class DashboardComponent implements OnInit {
   constructor(private fb: FormBuilder, private cookieService: CookieService, private router: Router, private plantsService: PlantsService,
     private countriesService: CountriesService) {
     this.newPlantForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(100), Validators.pattern(/^(?!\s*$).+/)]],
+      name: ['', [Validators.required, Validators.maxLength(100), Validators.pattern(/^(?=.*[a-zA-Z])[a-zA-Z0-9 ]*$/)]],
       country: ['', Validators.required]
     });
 
     this.combinedForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(100), Validators.pattern(/^(?!\s*$).+/)]],
+      name: ['', [Validators.required, Validators.maxLength(100), Validators.pattern(/^(?=.*[a-zA-Z])[a-zA-Z0-9 ]*$/)]],
       country: ['', Validators.required],
       selectedCategory: [null, Validators.required],
       readings: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
@@ -166,7 +166,6 @@ export class DashboardComponent implements OnInit {
       },
       (error) => {
         if (error.status === 404) {
-          console.log('No hay plantas para este usuario.');
           this.plants = [];
         } else {
           console.error('Error al obtener las plantas', error);
@@ -254,7 +253,7 @@ export class DashboardComponent implements OnInit {
       this.plantsService.deletePlant(plantId).subscribe(
         () => {
           this.getPlantsByUserId(this.user.id);
-              },
+        },
         (error) => {
           if (error.status === 200) {
             console.log('Planta eliminada, pero Angular lo interpreta como error:', error);
@@ -366,7 +365,7 @@ export class DashboardComponent implements OnInit {
 
         this.selectedPlant.name = plantData.name;
         this.selectedPlant.country = plantData.country;
-        
+
         this.plantsService.updateCategory(categoryData.id, categoryData).subscribe(
           () => {
             this.getPlantsByUserId(this.user.id);
@@ -378,6 +377,13 @@ export class DashboardComponent implements OnInit {
         );
       },
       error => {
+
+        if (error.status === 409) {
+          this.errorMessage = '* Ya tienes una planta con ese nombre y país.';
+        } else {
+          this.errorMessage = '* Error al actualizar la planta.';
+        }
+
         console.error('Error al actualizar la planta:', error);
       }
     );
@@ -394,13 +400,13 @@ export class DashboardComponent implements OnInit {
 
 
     this.plantsService.updateCategory(categoryData.id, categoryData).subscribe(
-          () => {
-            this.getPlantsByUserId(this.user.id);
-            this.getCategoriesByPlantID(this.selectedPlant.id_plant);
-          },
-          error => {
-            console.error('Error al actualizar la categoría:', error);
-          },
+      () => {
+        this.getPlantsByUserId(this.user.id);
+        this.getCategoriesByPlantID(this.selectedPlant.id_plant);
+      },
+      error => {
+        console.error('Error al actualizar la categoría:', error);
+      },
     );
   }
 
@@ -438,12 +444,12 @@ export class DashboardComponent implements OnInit {
 
     this.editCategoryForm.patchValue({
       selectedCategory: this.selectedCategory.id,
-            readings: this.selectedCategory.readings,
-            mediumAlerts: this.selectedCategory.mediumAlerts,
-            redAlerts: this.selectedCategory.redAlerts,
-            disabledSensors: this.selectedCategory.disabledSensors,
+      readings: this.selectedCategory.readings,
+      mediumAlerts: this.selectedCategory.mediumAlerts,
+      redAlerts: this.selectedCategory.redAlerts,
+      disabledSensors: this.selectedCategory.disabledSensors,
     });
-  }  
+  }
 
   onCategoryChange(event: Event): void {
     const selectedCategoryId = (event.target as HTMLSelectElement).value;
